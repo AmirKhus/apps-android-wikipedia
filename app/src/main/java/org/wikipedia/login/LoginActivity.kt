@@ -30,13 +30,20 @@ import org.wikipedia.util.log.L
 import org.wikipedia.views.NonEmptyValidator
 
 class LoginActivity : BaseActivity() {
-    private lateinit var binding: ActivityLoginBinding
+
+        private lateinit var binding: ActivityLoginBinding
     private lateinit var loginSource: String
     private var firstStepToken: String? = null
     private var funnel: LoginFunnel = LoginFunnel(WikipediaApp.getInstance())
     private val loginClient = LoginClient()
     private val loginCallback = LoginCallback()
     private var shouldLogLogin = true
+
+
+    override fun onStart() {
+        super.onStart()
+        active = true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +108,7 @@ class LoginActivity : BaseActivity() {
     override fun onStop() {
         binding.viewProgressBar.visibility = View.GONE
         loginClient.cancel()
+        active = false;
         super.onStop()
     }
 
@@ -240,6 +248,9 @@ class LoginActivity : BaseActivity() {
     }
 
     companion object {
+        @JvmStatic
+        var active: Boolean = false
+
         const val RESULT_LOGIN_SUCCESS = 1
         const val RESULT_LOGIN_FAIL = 2
         const val LOGIN_REQUEST_SOURCE = "login_request_source"
